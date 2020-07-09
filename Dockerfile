@@ -1,5 +1,6 @@
 FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
+ARG TIMEZONE=Canada/Pacific
 RUN apt update && apt install -y \
     ansible \
     build-essential \
@@ -18,6 +19,7 @@ RUN apt update && apt install -y \
     zsh
 
 # apt-add-repository --yes --update ppa:ansible/ansible
+RUN echo $TIMEZONE > /etc/timezone
 
 # zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
