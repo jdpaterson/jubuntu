@@ -98,4 +98,16 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias zshedit="vim ~/.zshrc"
+alias zedit="vim ~/.zshrc"
+alias zource="source ~/.zshrc"
+alias pushOrigin="git push origin | git branch | grep \* | cut -d ' ' -f2"
+alias fPushOrigin="git push -f origin | git branch | grep \* | cut -d ' ' -f2"
+alias ports="lsof -iTCP -sTCP:LISTEN -P"
+alias recent=git-select-recent
+
+# Calls functions from ~/.bash_functions
+if [ -d ~/.bash_functions ]; then
+    for file in ~/.bash_functions/*; do
+        . "$file"
+    done
+fi

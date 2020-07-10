@@ -21,10 +21,6 @@ RUN apt update && apt install -y \
 # apt-add-repository --yes --update ppa:ansible/ansible
 RUN echo $TIMEZONE > /etc/timezone
 
-# zsh
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-COPY ./setup/.zshrc /root/.zshrc
-
 # vim
 RUN git clone https://github.com/vim/vim.git; \
     cd vim/src; \
@@ -52,6 +48,13 @@ RUN ["/bin/bash", "-c", "/src/setup-scripts/nvm.sh"]
 RUN wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
 RUN mkdir sfdx
 RUN tar xJf sfdx-linux-amd64.tar.xz -C sfdx --strip-components 1 && ./sfdx/install
+
+
+# zsh etc...
+ADD ./setup/.bash_functions /root/.bash_functions
+RUN chmod -R +x /root/.bash_functions
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+COPY ./setup/.zshrc /root/.zshrc
 
 WORKDIR /home
 
