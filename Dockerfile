@@ -31,22 +31,22 @@ RUN git clone https://github.com/vim/vim.git; \
     make; \
     make install;
 
-# rbenv, ruby, bundler, rails
+# Postgres
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && apt update \
+    && apt install -y postgresql libpq-dev
+
+# rbenv, ruby, bundler, rails, basic gems
 COPY ./setup/rbenv_rails.sh /src/setup-scripts/
+COPY ./setup/Gemfile /src/setup-scripts/sample-rails/Gemfile
 RUN chmod +x /src/setup-scripts/rbenv_rails.sh
 RUN ["/bin/bash", "-c", "/src/setup-scripts/rbenv_rails.sh"]
 
-# nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-RUN /bin/bash -c export NVM_DIR="/root/.nvm" \
-    [ -s "/root/.nvm/nvm.sh" ] && \. "/root/.nvm/nvm.sh" \
-    [ -s "/root/.nvm/bash_completion" ] && \. "/root/.nvm/bash_completion"
-RUN /bin/bash -c 'source ~/.nvm/nvm.sh; \
-    nvm install node;'
-
-# yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# nvm, yarn, basic global libraries
+COPY ./setup/nvm.sh /src/setup-scripts/
+RUN chmod +x /src/setup-scripts/nvm.sh
+RUN ["/bin/bash", "-c", "/src/setup-scripts/nvm.sh"]
 
 # Salesforce sfdx
 RUN wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
@@ -56,7 +56,3 @@ RUN tar xJf sfdx-linux-amd64.tar.xz -C sfdx --strip-components 1 && ./sfdx/insta
 WORKDIR /home
 
 CMD ["zsh"]
-
-# docker build -t jubuntu .
-# docker run -it --name jubuntu -v /home/jerbear:/home -p 3000:3000 jubuntu
-# docker exec -it jubuntu /usr/bin/zsh
