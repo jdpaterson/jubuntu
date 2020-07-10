@@ -1,0 +1,17 @@
+git-select-recent(){
+    BRANCH_COUNT=${1:-5}
+    i=0
+    branches=()
+    while read entry
+    do
+        eval "$entry"
+        branches+=($ref)
+        let i++
+    done < <(git for-each-ref --format="ref=%(refname:short)" --count="$BRANCH_COUNT" --sort=-committerdate refs/heads)
+
+    select branch in ${branches[@]};
+    do
+        git checkout $branch
+        break;
+    done
+}
