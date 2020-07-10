@@ -39,22 +39,21 @@ COPY ./setup/Gemfile /src/setup-scripts/sample-rails/Gemfile
 RUN chmod +x /src/setup-scripts/rbenv_rails.sh
 RUN ["/bin/bash", "-c", "/src/setup-scripts/rbenv_rails.sh"]
 
-# nvm, yarn, basic global libraries
-COPY ./setup/nvm.sh /src/setup-scripts/
-RUN chmod +x /src/setup-scripts/nvm.sh
-RUN ["/bin/bash", "-c", "/src/setup-scripts/nvm.sh"]
-
 # Salesforce sfdx
 RUN wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
 RUN mkdir sfdx
 RUN tar xJf sfdx-linux-amd64.tar.xz -C sfdx --strip-components 1 && ./sfdx/install
-
 
 # zsh etc...
 ADD ./setup/.bash_functions /root/.bash_functions
 RUN chmod -R +x /root/.bash_functions
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 COPY ./setup/.zshrc /root/.zshrc
+
+# n, yarn, gatsby-cli, basic rails global libraries
+COPY ./setup/n.sh /src/setup-scripts/
+RUN chmod +x /src/setup-scripts/n.sh
+RUN ["/bin/bash", "-c", "/src/setup-scripts/n.sh"]
 
 WORKDIR /home
 
