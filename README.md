@@ -30,3 +30,9 @@ My local development directory is /Users/jaydp123/projects:
 The first time you run the container this will be empty, run `ssh-keygen`, then this volume will persist and ssh-keys will be loaded for future runs of jubuntu (or any other container that wants to use the keys):
 
 `-v ssh_jub:/root/.ssh`
+
+## Thoughts/Recommendations?
+
+Please add an issue to the Github repo. 
+
+Happy coding!
