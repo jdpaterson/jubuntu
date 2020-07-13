@@ -1,6 +1,8 @@
 FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TIMEZONE=Canada/Pacific
+ARG USER_ID=1000
+ARG GROUP_ID=1001
 RUN apt update && apt install -y \
     ansible \
     build-essential \
@@ -13,19 +15,11 @@ RUN apt update && apt install -y \
     libsqlite3-dev \
     make \
     software-properties-common \
+    sudo \
+    vim \
     wget \
-    yarn \
     zlib1g-dev \
     zsh
-
-# apt-add-repository --yes --update ppa:ansible/ansible
-RUN echo $TIMEZONE > /etc/timezone
-
-# vim
-RUN git clone https://github.com/vim/vim.git; \
-    cd vim/src; \
-    make; \
-    make install;
 
 # Postgres
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
@@ -33,28 +27,46 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ma
     && apt update \
     && apt install -y postgresql libpq-dev
 
-# rbenv, ruby, bundler, rails, basic gems
-COPY ./setup/rbenv_rails.sh /src/setup-scripts/
-COPY ./setup/Gemfile /src/setup-scripts/sample-rails/Gemfile
-RUN chmod +x /src/setup-scripts/rbenv_rails.sh
-RUN ["/bin/bash", "-c", "/src/setup-scripts/rbenv_rails.sh"]
+# Prep for yarn install
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# apt-add-repository --yes --update ppa:ansible/ansible
+RUN echo $TIMEZONE > /etc/timezone
+
+RUN groupadd -r -g $GROUP_ID jubuntu
+RUN useradd -rm -d /home/jubuntu -s /bin/bash -g root -G jubuntu -u $USER_ID jubuntu
+RUN usermod -aG sudo jubuntu
+RUN echo "jubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+COPY ./setup/.bash_functions /home/jubuntu/.bash_functions/
+RUN chmod -R g+rwx /home/jubuntu/.bash_functions
 
 # Salesforce sfdx
 RUN wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
 RUN mkdir sfdx
 RUN tar xJf sfdx-linux-amd64.tar.xz -C sfdx --strip-components 1 && ./sfdx/install
 
-# zsh etc...
-ADD ./setup/.bash_functions /root/.bash_functions
-RUN chmod -R +x /root/.bash_functions
+COPY ./setup/rbenv_rails.sh /home/jubuntu/setup/
+COPY ./setup/Gemfile /home/jubuntu/setup/sample-rails/
+RUN chmod -R g+rwx /home/jubuntu/setup
+
+USER jubuntu
+
+# rbenv, ruby, rails, global gems
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-COPY ./setup/.zshrc /root/.zshrc
+RUN ["/bin/bash", "-c", "/home/jubuntu/setup/rbenv_rails.sh"]
 
-# n, yarn, gatsby-cli, basic rails global libraries
-COPY ./setup/n.sh /src/setup-scripts/
-RUN chmod +x /src/setup-scripts/n.sh
-RUN ["/bin/bash", "-c", "/src/setup-scripts/n.sh"]
+USER root
+COPY ./setup/nvm.sh /home/jubuntu/setup/
+RUN chmod -R g+rwx /home/jubuntu/setup
+USER jubuntu
 
-WORKDIR /home
+# nvm, node, yarn, global packages
+ENV XDG_CONFIG_HOME /home/jubuntu
+RUN ["zsh", "-c", "/home/jubuntu/setup/nvm.sh"]
+
+COPY ./setup/.zshrc /home/jubuntu/.zshrc
+WORKDIR /home/jubuntu/workdir
 
 CMD ["zsh"]
