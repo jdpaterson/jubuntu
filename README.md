@@ -5,7 +5,7 @@
 ## Helpful Commands: 
 
 ### Run a new container (options explained below):
-`docker run -it --name jubuntu -p 3001:3000 -v /Users/jaydp123/projects:/home -v ssh_jub:/root/.ssh`
+`docker run -it --name jubuntu -p 3001:3000 -p 8001:8000 -v /Users/jaydp123/projects:/home/jubuntu/workdir -v ssh_jub:/root/.ssh`
 
 ### Connect to CL from a stopped container
 `docker start jubuntu`
@@ -23,7 +23,7 @@ Be careful not to conflict with any other containers, for Rails: I use 3001 to a
 
 My local development directory is /Users/jaydp123/projects:
 
-`-v /Users/jaydp123/projects:/home`
+`-v /Users/jaydp123/projects:/home/jubuntu/workdir`
 
 #### Mount an ssh volume:
 
