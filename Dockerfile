@@ -53,6 +53,8 @@ RUN chmod -R g+rwx /home/jubuntu/setup
 
 USER jubuntu
 
+RUN mkdir /home/jubuntu/.ssh
+
 # rbenv, ruby, rails, global gems
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN ["/bin/bash", "-c", "/home/jubuntu/setup/rbenv_rails.sh"]
