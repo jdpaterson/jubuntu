@@ -5,4 +5,4 @@ export NVM_DIR="$HOME/nvm"
 nvm install node
 sudo apt update && sudo apt install -y yarn
 yarn global add webpack-dev-server
-npm install -g gatsby-cli netlify-cli
+npm install -g gatsby-cli netlify-cli jest

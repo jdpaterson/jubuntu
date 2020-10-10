@@ -12,10 +12,16 @@ RUN apt update && apt install -y \
     libncursesw5-dev \
     libreadline-dev \
     libssl-dev \
+    libffi-dev \
     libsqlite3-dev \
     make \
+    python3.8 \
+    python3-pip \
+    python3-dev \
+    python3-venv \
     software-properties-common \
     sudo \
+    unzip \
     vim \
     wget \
     zlib1g-dev \
@@ -68,7 +74,18 @@ USER jubuntu
 ENV XDG_CONFIG_HOME /home/jubuntu
 RUN ["zsh", "-c", "/home/jubuntu/setup/nvm.sh"]
 
+# install go
+USER root
+RUN curl -O https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go1.15.2.linux-amd64.tar.gz
+
+# install ngrok
+RUN curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip \
+    && unzip ngrok.zip
+
+USER jubuntu
 COPY ./setup/.zshrc /home/jubuntu/.zshrc
+RUN chmod g+rwx /home/jubuntu/.zshrc
 WORKDIR /home/jubuntu/workdir
 
 CMD ["zsh"]
