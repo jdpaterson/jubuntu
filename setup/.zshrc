@@ -81,6 +81,8 @@ eval "$($HOME/.rbenv/bin/rbenv init -)"
 export NVM_DIR="$HOME/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$PATH:/usr/local/bin
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -100,12 +102,13 @@ export NVM_DIR="$HOME/nvm"
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
+alias fPushOrigin="git push -f origin | git branch | grep \* | cut -d ' ' -f2"
+alias ngrok="~/ngrok"
+alias ports="lsof -iTCP -sTCP:LISTEN -P"
+alias pushOrigin="git push origin | git branch | grep \* | cut -d ' ' -f2"
+alias recent=git-select-recent
 alias zedit="vim ~/.zshrc"
 alias zource="source ~/.zshrc"
-alias pushOrigin="git push origin | git branch | grep \* | cut -d ' ' -f2"
-alias fPushOrigin="git push -f origin | git branch | grep \* | cut -d ' ' -f2"
-alias ports="lsof -iTCP -sTCP:LISTEN -P"
-alias recent=git-select-recent
 
 # Calls functions from ~/.bash_functions
 if [ -d ~/.bash_functions ]; then
