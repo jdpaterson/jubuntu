@@ -6,6 +6,6 @@ eval "$(~/.rbenv/bin/rbenv init -)"
 rbenv install 2.6.6
 rbenv global 2.6.6
 gem install bundler
-gem install rails
-cd ~/setup/sample-rails
-bundle
+# gem install rails
+# cd ~/setup/sample-rails
+# bundle

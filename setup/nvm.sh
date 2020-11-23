@@ -4,5 +4,4 @@ export NVM_DIR="$HOME/nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm install node
 sudo apt update && sudo apt install -y yarn
-yarn global add webpack-dev-server
-npm install -g gatsby-cli netlify-cli jest
+yarn global add webpack webpack-cli webpack-dev-server jest

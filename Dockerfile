@@ -86,6 +86,17 @@ RUN curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ng
 COPY ./setup/.zshrc /home/jubuntu/.zshrc
 RUN chmod g+rwx /home/jubuntu/.zshrc
 USER jubuntu
+
+WORKDIR /home/jubuntu
+RUN mkdir -p /home/jubuntu/.local/bin
+RUN curl https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip -o terraform.zip \
+    && unzip terraform.zip \
+    && mv terraform /home/jubuntu/.local/bin
+
+RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
+    && unzip awscliv2.zip \
+    && sudo ./aws/install
+
 WORKDIR /home/jubuntu/workdir
 
 CMD ["zsh"]
