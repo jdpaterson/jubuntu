@@ -5,7 +5,7 @@
 ## Helpful Commands: 
 
 ### Run a new container (options explained below):
-`docker run -it --name jubuntu -p 3001:3000 -p 8001:8000 -v /Users/jaydp123/projects:/home/jubuntu/workdir -v ssh_jub:/root/.ssh`
+`docker run -it --name jubuntu -p 3001:3000 -p 8001:8000 -v /Users/jaydp123/projects:/home/jubuntu/workdir -v ssh_jub:/root/.ssh jaydp123/jubuntu`
 
 ### Connect to CL from a stopped container
 `docker start jubuntu`
